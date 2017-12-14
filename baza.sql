@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS `prijemni`
+
 CREATE TABLE IF NOT EXISTS `mydb`.`Osoba` (
   `jmbg` INT NOT NULL,
   `ime` VARCHAR(45) NULL,
