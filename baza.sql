@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `prijemni`
+CREATE DATABASE IF NOT EXISTS `mydb`;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Osoba` (
   `jmbg` INT NOT NULL,
@@ -7,6 +7,44 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Osoba` (
   `br_tel` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
   PRIMARY KEY (`jmbg`))
+ENGINE = InnoDB
+;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Skola` (
+  `ptt` INT NOT NULL,
+  `Adresa` VARCHAR(45) NULL,
+  `Naziv` VARCHAR(45) NULL,
+  `prima_ucenika` INT NULL,
+  PRIMARY KEY (`ptt`))
+ENGINE = InnoDB
+;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Polaganje` (
+  `idPolaganja` INT NOT NULL,
+  `Datum` DATE NULL,
+  `Skola_ptt` INT NOT NULL,
+  PRIMARY KEY (`idPolaganja`),
+  INDEX `fk_Polaganje_Skola1_idx` (`Skola_ptt` ASC),
+  CONSTRAINT `fk_Polaganje_Skola1`
+    FOREIGN KEY (`Skola_ptt`)
+    REFERENCES `mydb`.`Skola` (`ptt`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Grupa` (
+  `idGrupe` INT NOT NULL,
+  `vreme_pocetka` TIME NULL,
+  `vreme_zavrsetka` TIME NULL,
+  `Polaganje_idPolaganja` INT NOT NULL,
+  PRIMARY KEY (`idGrupe`, `Polaganje_idPolaganja`),
+  INDEX `fk_Grupa_Polaganje1_idx` (`Polaganje_idPolaganja` ASC),
+  CONSTRAINT `fk_Grupa_Polaganje1`
+    FOREIGN KEY (`Polaganje_idPolaganja`)
+    REFERENCES `mydb`.`Polaganje` (`idPolaganja`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 ;
 
@@ -28,6 +66,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Ucenik` (
 ENGINE = InnoDB
 ;
 
+CREATE TABLE IF NOT EXISTS `mydb`.`Ucionica` (
+  `broj_ucionice` INT NOT NULL,
+  `kapacitet` INT NULL,
+  `Skola_ptt` INT NOT NULL,
+  PRIMARY KEY (`broj_ucionice`, `Skola_ptt`),
+  INDEX `fk_Ucionica_Skola1_idx` (`Skola_ptt` ASC),
+  CONSTRAINT `fk_Ucionica_Skola1`
+    FOREIGN KEY (`Skola_ptt`)
+    REFERENCES `mydb`.`Skola` (`ptt`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+;
+
 CREATE TABLE IF NOT EXISTS `mydb`.`Nastavnik` (
   `Osoba_jmbg` INT NOT NULL,
   `Ucionica_broj_ucionice` INT NOT NULL,
@@ -41,21 +93,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Nastavnik` (
   CONSTRAINT `fk_Nastavnik_Ucionica1`
     FOREIGN KEY (`Ucionica_broj_ucionice`)
     REFERENCES `mydb`.`Ucionica` (`broj_ucionice`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`Grupa` (
-  `idGrupe` INT NOT NULL,
-  `vreme_pocetka` TIME NULL,
-  `vreme_zavrsetka` TIME NULL,
-  `Polaganje_idPolaganja` INT NOT NULL,
-  PRIMARY KEY (`idGrupe`, `Polaganje_idPolaganja`),
-  INDEX `fk_Grupa_Polaganje1_idx` (`Polaganje_idPolaganja` ASC),
-  CONSTRAINT `fk_Grupa_Polaganje1`
-    FOREIGN KEY (`Polaganje_idPolaganja`)
-    REFERENCES `mydb`.`Polaganje` (`idPolaganja`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -93,43 +130,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Dezura_u_grupi` (
   CONSTRAINT `fk_Nastavnik_has_Grupa_Grupa1`
     FOREIGN KEY (`Grupa_idGrupe`)
     REFERENCES `mydb`.`Grupa` (`idGrupe`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`Ucionica` (
-  `broj_ucionice` INT NOT NULL,
-  `kapacitet` INT NULL,
-  `Skola_ptt` INT NOT NULL,
-  PRIMARY KEY (`broj_ucionice`, `Skola_ptt`),
-  INDEX `fk_Ucionica_Skola1_idx` (`Skola_ptt` ASC),
-  CONSTRAINT `fk_Ucionica_Skola1`
-    FOREIGN KEY (`Skola_ptt`)
-    REFERENCES `mydb`.`Skola` (`ptt`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`Skola` (
-  `ptt` INT NOT NULL,
-  `Adresa` VARCHAR(45) NULL,
-  `Naziv` VARCHAR(45) NULL,
-  `prima_ucenika` INT NULL,
-  PRIMARY KEY (`ptt`))
-ENGINE = InnoDB
-;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`Polaganje` (
-  `idPolaganja` INT NOT NULL,
-  `Datum` DATE NULL,
-  `Skola_ptt` INT NOT NULL,
-  PRIMARY KEY (`idPolaganja`),
-  INDEX `fk_Polaganje_Skola1_idx` (`Skola_ptt` ASC),
-  CONSTRAINT `fk_Polaganje_Skola1`
-    FOREIGN KEY (`Skola_ptt`)
-    REFERENCES `mydb`.`Skola` (`ptt`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
