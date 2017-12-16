@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS `mydb`;
 CREATE DATABASE IF NOT EXISTS `mydb`;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Osoba` (
@@ -50,8 +51,12 @@ ENGINE = InnoDB
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Ucenik` (
   `Osoba_jmbg` INT NOT NULL,
-  `Grupa_idGrupe` INT NOT NULL,
-  PRIMARY KEY (`Osoba_jmbg`, `Grupa_idGrupe`),
+  `ime` VARCHAR(45) NULL,
+  `prezime` VARCHAR(45) NULL,
+  `br_tel` VARCHAR(45) NULL,
+  `email` VARCHAR(45) NULL,
+  `Grupa_idGrupe` INT,
+  PRIMARY KEY (`Osoba_jmbg`),
   INDEX `fk_Ucenik_Grupa1_idx` (`Grupa_idGrupe` ASC),
   CONSTRAINT `fk_Ucenik_Osoba1`
     FOREIGN KEY (`Osoba_jmbg`)
