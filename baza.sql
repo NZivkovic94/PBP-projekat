@@ -87,8 +87,12 @@ ENGINE = InnoDB
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Nastavnik` (
   `Osoba_jmbg` INT NOT NULL,
-  `Ucionica_broj_ucionice` INT NOT NULL,
-  PRIMARY KEY (`Osoba_jmbg`, `Ucionica_broj_ucionice`),
+  `ime` VARCHAR(45) NULL,
+  `prezime` VARCHAR(45) NULL,
+  `br_tel` VARCHAR(45) NULL,
+  `email` VARCHAR(45) NULL,
+  `Ucionica_broj_ucionice` INT,
+  PRIMARY KEY (`Osoba_jmbg`),
   INDEX `fk_Nastavnik_Ucionica1_idx` (`Ucionica_broj_ucionice` ASC),
   CONSTRAINT `fk_Nastavnik_Osoba`
     FOREIGN KEY (`Osoba_jmbg`)
