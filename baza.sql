@@ -146,8 +146,8 @@ ENGINE = InnoDB
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Polaze` (
   `Ucionica_broj_ucionice` INT NOT NULL,
-  `Grupa_idGrupe` INT NOT NULL,
-  PRIMARY KEY (`Ucionica_broj_ucionice`, `Grupa_idGrupe`),
+  `Grupa_idGrupe` INT,
+  PRIMARY KEY (`Ucionica_broj_ucionice`),
   INDEX `fk_Ucionica_has_Grupa_Grupa1_idx` (`Grupa_idGrupe` ASC),
   INDEX `fk_Ucionica_has_Grupa_Ucionica1_idx` (`Ucionica_broj_ucionice` ASC),
   CONSTRAINT `fk_Ucionica_has_Grupa_Ucionica1`
