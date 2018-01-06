@@ -27,7 +27,6 @@ int main(int argc, char** argv) {
     
     int i;
     int option;
-    int idg;
     
     char query[QUERY_SIZE];
  //   char buffer[BUFFER_SIZE];
@@ -37,6 +36,7 @@ int main(int argc, char** argv) {
     char sname[45];
     char tel[45];
     char email[45];
+    int idg;
 
     char ans[45];
 
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
           fprintf(stdout,"1 - informacije o svim ucenicima koji polazu prijemni ispit;\n");
           fprintf(stdout,"2 - informacije o svim nastavnicima koji kontrolisu polaganje;\n");
           fprintf(stdout,"3 - raspored ucenika po grupama;\n");
-          fprintf(stdout,"4 - unos novih ucenika;\n");
+          fprintf(stdout,"4 - unos novih osoba;\n");
           fprintf(stdout,"5 - izmena nekih podataka o ucenicima;\n");
           fprintf(stdout,"6 - izlazak iz aplikacije\n");
           
@@ -126,18 +126,40 @@ int main(int argc, char** argv) {
             mysql_free_result (result);
             
         } else if (option == 4) {
-            fprintf(stdout,"unesite novog ucenika:\n");
-            fprintf(stdout,"Unesite jmbg, ime, prezime, kontakt telefon, email i grupu:\n");
-            fscanf(stdin,"%d%s%s%s%s%d", &id, name, sname, tel, email, &idg);
+            fprintf(stdout,"unesite novu osobu:\n");
+            fprintf(stdout,"Unesite jmbg, ime, prezime, kontakt telefon i email:\n");
+            fscanf(stdin,"%d%s%s%s%s", &id, name, sname, tel, email);
             
-            sprintf(query, "INSERT INTO Ucenik VALUES('%d','%s','%s','%s','%s', %d);", id, name, sname, tel, email, idg);
+            sprintf(query, "INSERT INTO Osoba VALUES('%d','%s','%s','%s','%s');", id, name, sname, tel, email);
 
                 if (mysql_query (connection, query) != 0) {
                     error_fatal ("Greska u upitu %s\n", mysql_error (connection));
                 }
                 
-                fprintf(stdout,"Ucenik uspesno upisan!\n");                
+            fprintf(stdout,"Da li unosite: 1 - ucenika\n2 - nastavnika?\n");
 
+            int op;
+            fscanf(stdin, "%d", &op);
+
+            if(op == 1){
+                fprintf(stdout,"U koju grupu zelite da ubacite ucenika?\n");
+                fscanf(stdin, "%d", &idg);
+                sprintf(query, "INSERT INTO Ucenik VALUES('%d', '%d', '%d');", id, idg, 1);
+
+                if (mysql_query (connection, query) != 0) {
+                    error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                }
+            }
+            else if(op == 2){
+                fprintf(stdout,"U koju ucionicu zelite da ubacite nastavnika?\n");
+                int br_ucionice;
+                fscanf(stdin, "%d", &br_ucionice);
+                sprintf(query, "INSERT INTO Nastavnik VALUES('%d', '%d',);", id, br_ucionice);
+
+                if (mysql_query (connection, query) != 0) {
+                    error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                }
+            }
         } else if (option == 5) {
             fprintf(stdout,"Unesite jmbg ucenika kojeg zelite da izmenite:\n");
             fscanf(stdin,"%d", &id);
