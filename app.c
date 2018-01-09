@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
     char tel[45];
     char email[45];
     int idg;
+    int brGrupa = 3;
 
     char ans[45];
 
@@ -147,7 +148,43 @@ int main(int argc, char** argv) {
                 sprintf(query, "INSERT INTO Ucenik VALUES('%d', '%d', '%d');", id, idg, 1);
 
                 if (mysql_query (connection, query) != 0) {
-                    error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                    //error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                    fprintf(stdout,"Nema dovoljno grupa, pravimo novu.\nUnesite vreme pocetka i zavrsetka.\n");
+                    char start[45], end[45];
+                    fscanf(stdin, "%s%s", start, end);
+                    brGrupa++;
+                    sprintf(query, "INSERT INTO Grupa VALUES('%d', '%s', '%s', 1);", brGrupa, start, end);
+                    
+                    if (mysql_query (connection, query) != 0) {
+                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                    }
+
+                    sprintf(query, "INSERT INTO Polaze VALUES(1, '%d');", brGrupa);
+                    if (mysql_query (connection, query) != 0) {
+                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                    }
+
+                    sprintf(query, "INSERT INTO Polaze VALUES(2, '%d');", brGrupa);
+                    if (mysql_query (connection, query) != 0) {
+                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                    }
+
+                    sprintf(query, "INSERT INTO Polaze VALUES(3, '%d');", brGrupa);
+                    if (mysql_query (connection, query) != 0) {
+                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                    }
+
+                    sprintf(query, "INSERT INTO Polaze VALUES(4, '%d');", brGrupa);
+                    if (mysql_query (connection, query) != 0) {
+                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                    }
+
+                    sprintf(query, "INSERT INTO Ucenik VALUES('%d', '%d', '%d');", id, brGrupa, 1);
+                    if (mysql_query (connection, query) != 0) {
+                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                    }
+
+                    fprintf(stdout,"ucenik je ubacen u grupu %d\n", brGrupa);
                 }
             }
             else if(op == 2){
