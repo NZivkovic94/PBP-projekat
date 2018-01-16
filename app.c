@@ -38,6 +38,7 @@ int main(int argc, char** argv) {
     char email[45];
     int idg;
     int brGrupa = 3;
+    int br_ucionice;
 
     char ans[45];
 
@@ -59,7 +60,7 @@ int main(int argc, char** argv) {
           fscanf(stdin, "%d", &option);
           
           if (option == 1) {
-              sprintf(query, "SELECT ime AS `Ime`, prezime AS `Prezime`, br_tel AS `Telefon`, email AS `e-mail` FROM Ucenik");
+              sprintf(query, "SELECT ime AS `Ime`, prezime AS `Prezime`, br_tel AS `Telefon`, email AS `e-mail` FROM Ucenik join Osoba on jmbg = Osoba.jmbg");
               if (mysql_query (connection, query) != 0) {
                   error_fatal ("Greska u upitu %s\n", mysql_error (connection));
               }
@@ -68,7 +69,7 @@ int main(int argc, char** argv) {
               for (i = 0; i < mysql_field_count(connection); i++){
                   printf("%-20s", field[i].name);
                   
-            }
+                }
             printf("\n");
             
             while ((row = mysql_fetch_row (result)) != 0){
@@ -81,7 +82,7 @@ int main(int argc, char** argv) {
             mysql_free_result (result);
               
         } else if (option == 2) {
-            sprintf(query, "SELECT ime AS `Ime`, prezime AS `Prezime`, br_tel AS `Telefon`, email AS `e-mail` FROM Nastavnik");
+            sprintf(query, "SELECT ime AS `Ime`, prezime AS `Prezime`, br_tel AS `Telefon`, email AS `e-mail` FROM Nastavnik join Osoba on jmbg = Osoba_jmbg");
               if (mysql_query (connection, query) != 0) {
                   error_fatal ("Greska u upitu %s\n", mysql_error (connection));
               }
@@ -105,7 +106,7 @@ int main(int argc, char** argv) {
             fprintf(stdout,"Unesite grupu koju zelite da vidite:\n");
             fscanf(stdin,"%d",&idg);
             
-            sprintf(query, "SELECT ime AS `Ime`, prezime AS `Prezime` FROM Ucenik WHERE %d=`Grupa_idGrupe`",idg);
+            sprintf(query, "SELECT ime AS `Ime`, prezime AS `Prezime` FROM Ucenik join Osoba on jmbg = Osoba_jmbg WHERE %d =`Grupa_idGrupe`",idg);
               if (mysql_query (connection, query) != 0) {
                   error_fatal ("Greska u upitu %s\n", mysql_error (connection));
               }
@@ -137,7 +138,7 @@ int main(int argc, char** argv) {
                     error_fatal ("Greska u upitu %s\n", mysql_error (connection));
                 }
                 
-            fprintf(stdout,"Da li unosite: 1 - ucenika\n2 - nastavnika?\n");
+            fprintf(stdout,"Da li unosite:\n1 - ucenika\n2 - nastavnika?\n");
 
             int op;
             fscanf(stdin, "%d", &op);
@@ -149,49 +150,56 @@ int main(int argc, char** argv) {
 
                 if (mysql_query (connection, query) != 0) {
                     //error_fatal ("Greska u upitu %s\n", mysql_error (connection));
-                    fprintf(stdout,"Nema dovoljno grupa, pravimo novu.\nUnesite vreme pocetka i zavrsetka.\n");
-                    char start[45], end[45];
-                    fscanf(stdin, "%s%s", start, end);
-                    brGrupa++;
-                    sprintf(query, "INSERT INTO Grupa VALUES('%d', '%s', '%s', 1);", brGrupa, start, end);
+                    fprintf(stdout,"Nema toliko grupa, pokusavamo da ga smestimo u neku od postojecih\n");
+
+                    sprintf(query, "INSERT INTO Ucenik VALUES('%d', '%d', '%d');", id, 1, 1);
+                    if (mysql_query (connection, query) != 0) {
+                        fprintf(stdout,"Nije uspelo nalazenje grupe, pravimo novu. Unesite vreme pocetka i zavrsetka\n");
+                        char start[45], end[45];
+                        fscanf(stdin, "%s%s", start, end);
+                        brGrupa++;
+                        sprintf(query, "INSERT INTO Grupa VALUES('%d', '%s', '%s', 1);", brGrupa, start, end);
                     
-                    if (mysql_query (connection, query) != 0) {
-                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                        if (mysql_query (connection, query) != 0) {
+                            error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                        }
+
+                        sprintf(query, "INSERT INTO Polaze VALUES(1, '%d');", brGrupa);
+                        if (mysql_query (connection, query) != 0) {
+                            error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                        }
+
+                        sprintf(query, "INSERT INTO Polaze VALUES(2, '%d');", brGrupa);
+                        if (mysql_query (connection, query) != 0) {
+                            error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                        }
+
+                        sprintf(query, "INSERT INTO Polaze VALUES(3, '%d');", brGrupa);
+                        if (mysql_query (connection, query) != 0) {
+                            error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                        }
+
+                        sprintf(query, "INSERT INTO Polaze VALUES(4, '%d');", brGrupa);
+                        if (mysql_query (connection, query) != 0) {
+                            error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                        }
+
+                        sprintf(query, "INSERT INTO Ucenik VALUES('%d', '%d', '%d');", id, brGrupa, 1);
+                        if (mysql_query (connection, query) != 0) {
+                            error_fatal ("Greska u upitu %s\n", mysql_error (connection));
+                        }
                     }
 
-                    sprintf(query, "INSERT INTO Polaze VALUES(1, '%d');", brGrupa);
-                    if (mysql_query (connection, query) != 0) {
-                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
-                    }
+                    
 
-                    sprintf(query, "INSERT INTO Polaze VALUES(2, '%d');", brGrupa);
-                    if (mysql_query (connection, query) != 0) {
-                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
-                    }
-
-                    sprintf(query, "INSERT INTO Polaze VALUES(3, '%d');", brGrupa);
-                    if (mysql_query (connection, query) != 0) {
-                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
-                    }
-
-                    sprintf(query, "INSERT INTO Polaze VALUES(4, '%d');", brGrupa);
-                    if (mysql_query (connection, query) != 0) {
-                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
-                    }
-
-                    sprintf(query, "INSERT INTO Ucenik VALUES('%d', '%d', '%d');", id, brGrupa, 1);
-                    if (mysql_query (connection, query) != 0) {
-                        error_fatal ("Greska u upitu %s\n", mysql_error (connection));
-                    }
 
                     fprintf(stdout,"ucenik je ubacen u grupu %d\n", brGrupa);
                 }
             }
             else if(op == 2){
                 fprintf(stdout,"U koju ucionicu zelite da ubacite nastavnika?\n");
-                int br_ucionice;
                 fscanf(stdin, "%d", &br_ucionice);
-                sprintf(query, "INSERT INTO Nastavnik VALUES('%d', '%d',);", id, br_ucionice);
+                sprintf(query, "INSERT INTO Nastavnik VALUES('%d', '%d');", id, br_ucionice);
 
                 if (mysql_query (connection, query) != 0) {
                     error_fatal ("Greska u upitu %s\n", mysql_error (connection));
@@ -206,16 +214,16 @@ int main(int argc, char** argv) {
             if (!strcmp(ans,"ime")) {
                 fprintf(stdout,"Unesite ime:\n");
                 fscanf(stdin,"%s",name);
-                sprintf(query, "UPDATE Ucenik SET ime='%s' WHERE Osoba_jmbg='%d'",name, id);
+                sprintf(query, "UPDATE Osoba SET ime='%s' WHERE jmbg='%d'",name, id);
             }
             else if (!strcmp(ans,"prezime")) {
                 fprintf(stdout,"Unesite prezime:\n");
                 fscanf(stdin,"%s",sname);
-                sprintf(query, "UPDATE Ucenik SET prezime='%s' WHERE Osoba_jmbg='%d'", sname, id);
+                sprintf(query, "UPDATE Osoba SET prezime='%s' WHERE jmbg='%d'", sname, id);
             } else if (!strcmp(ans,"telefon")) {
                 fprintf(stdout,"Unesite telefon:\n");
                 fscanf(stdin,"%s", tel);
-                sprintf(query, "UPDATE Ucenik SET br_tel = '%s' WHERE Osoba_jmbg='%d'", tel, id);
+                sprintf(query, "UPDATE Osoba SET br_tel = '%s' WHERE jmbg='%d'", tel, id);
             }
             if (mysql_query (connection, query) != 0) {
                 error_fatal ("Greska u upitu %s\n", mysql_error (connection));

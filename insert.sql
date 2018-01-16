@@ -29,11 +29,6 @@ INSERT INTO `Polaze` VALUES(3, 3);
 INSERT INTO `Polaze` VALUES(4, 3);
 
 INSERT INTO `Osoba` VALUES(1, 'Nikola', 'Zivkovic', '063/223-455', 'email1@gmail.com');
-INSERT INTO `Osoba` VALUES(2, 'Dusica', 'Krstic', '063/223-455', 'email1@gmail.com');
-INSERT INTO `Osoba` VALUES(3, 'Aleksandar', 'Himel', '063/223-455', 'email1@gmail.com');
-INSERT INTO `Osoba` VALUES(4, 'Aleksandar', 'Markovic', '063/223-455', 'email1@gmail.com');
-INSERT INTO `Osoba` VALUES(5, 'Nikola', 'Vlahovic', '063/223-455', 'email1@gmail.com');
-INSERT INTO `Osoba` VALUES(6, 'Ivan', 'Jovanovic', '063/223-455', 'email1@gmail.com');
-INSERT INTO `Osoba` VALUES(7, 'Nikola', 'Zivkovic', '063/223-455', 'email1@gmail.com');
+INSERT INTO `Ucenik` VALUES(1, 1, 1);
 
-
+INSERT INTO `Osoba` VALUES(2, 'Marija', 'Stamenkovic', '063/223-455', 'email1@gmail.com');
